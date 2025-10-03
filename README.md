@@ -367,3 +367,136 @@ If you want to learn more about building native executables, please consult http
 Easily start your REST Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+## 🎨 Frontend Application
+
+Se ha implementado una aplicación frontend completa con React + Vite + TypeScript que consume todos los endpoints del backend.
+
+### Características del Frontend
+
+- ✅ **Sistema de Autenticación**: Login, Registro, JWT token management con auto-refresh
+- ✅ **Gestión de Categorías**: CRUD completo (Crear, Leer, Actualizar, Eliminar)
+- ✅ **Gestión de Usuarios**: CRUD completo con roles y estados
+- ✅ **Estadísticas de Usuarios**: Dashboard con estadísticas por rol y estado
+- ✅ **Rutas Protegidas**: Autenticación requerida para rutas privadas
+- ✅ **TypeScript**: Tipado completo de datos
+- ✅ **Diseño Responsivo**: Interface amigable para móviles
+
+### Stack Tecnológico Frontend
+
+- **React 18** - Librería UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool y dev server
+- **React Router DOM** - Enrutamiento cliente
+- **Axios** - Cliente HTTP con interceptores
+- **React Hook Form** - Gestión de formularios
+- **Zod** - Validación de esquemas
+
+### Instalación del Frontend
+
+1. Navegar al directorio frontend:
+```bash
+cd frontend
+```
+
+2. Instalar dependencias:
+```bash
+npm install
+```
+
+3. Configurar variables de entorno:
+```bash
+cp .env.example .env
+```
+
+4. Iniciar en modo desarrollo:
+```bash
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173`
+
+### Páginas Disponibles
+
+#### Rutas Públicas
+- `/login` - Inicio de sesión
+- `/register` - Registro de usuario
+
+#### Rutas Protegidas
+- `/` - Dashboard principal
+- `/categories` - Lista de categorías
+- `/categories/new` - Crear categoría
+- `/categories/:id` - Ver detalle de categoría
+- `/categories/:id/edit` - Editar categoría
+- `/users` - Lista de usuarios
+- `/users/new` - Crear usuario
+- `/users/:id` - Ver detalle de usuario
+- `/users/:id/edit` - Editar usuario
+- `/users/stats` - Estadísticas de usuarios
+
+### Servicios API Implementados
+
+Todos los controladores del backend están implementados en el frontend:
+
+#### AuthService (`/api/v1/auth`)
+- `login(credentials)` - Login de usuario
+- `register(data)` - Registro de usuario
+- `refreshToken(token)` - Renovar access token
+- `logout(token)` - Cerrar sesión
+- `validateToken()` - Validar token actual
+
+#### CategoryService (`/api/v1/categories`)
+- `getAll(activeOnly?)` - Obtener todas las categorías
+- `getById(id)` - Obtener categoría por ID
+- `create(data)` - Crear nueva categoría
+- `update(id, data)` - Actualizar categoría
+- `delete(id)` - Eliminar categoría
+- `ping()` - Verificar conectividad
+
+#### UserService (`/api/v1/users`)
+- `getAll(status?, role?)` - Obtener usuarios con filtros
+- `getById(id)` - Obtener usuario por ID
+- `getByUsername(username)` - Obtener usuario por username
+- `create(data)` - Crear nuevo usuario
+- `update(id, data)` - Actualizar usuario
+- `changePassword(id, data)` - Cambiar contraseña
+- `delete(id)` - Eliminar usuario
+- `getStats()` - Obtener estadísticas
+
+### Estructura del Proyecto Frontend
+
+```
+frontend/
+├── src/
+│   ├── components/          # Componentes reutilizables
+│   │   ├── common/          # ProtectedRoute, etc.
+│   │   └── layout/          # Layout, Navbar
+│   ├── contexts/            # AuthContext para gestión de autenticación
+│   ├── pages/               # Páginas de la aplicación
+│   │   ├── auth/            # Login, Register
+│   │   ├── categories/      # CRUD de categorías
+│   │   └── users/           # CRUD de usuarios
+│   ├── services/            # Servicios API
+│   │   ├── api.ts           # Configuración Axios
+│   │   ├── authService.ts   # Servicio de autenticación
+│   │   ├── categoryService.ts # Servicio de categorías
+│   │   └── userService.ts   # Servicio de usuarios
+│   ├── types/               # Tipos TypeScript
+│   ├── App.tsx              # Componente principal con rutas
+│   └── main.tsx             # Punto de entrada
+├── .env.example             # Template de variables de entorno
+├── package.json             # Dependencias
+└── README.md               # Documentación del frontend
+```
+
+### Flujo de Autenticación
+
+1. Usuario ingresa credenciales en `/login` o `/register`
+2. Backend retorna `accessToken` y `refreshToken`
+3. Tokens se almacenan en `localStorage`
+4. `accessToken` se añade automáticamente a todas las peticiones vía interceptor Axios
+5. Si el token expira (401), se usa `refreshToken` para obtener uno nuevo
+6. Si el refresh falla, se redirige a `/login`
+
+### Documentación Completa
+
+Para más detalles sobre el frontend, consulta [frontend/README.md](frontend/README.md)
